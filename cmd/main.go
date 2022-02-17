@@ -1,14 +1,13 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/ebobo/postgresql_go/pkg/store"
+	"github.com/ebobo/utilities_go/pkg/greeting"
 )
 
 func main() {
 
-	fmt.Println("Hello, Qi")
+	greeting.HelloQi()
 
 	//runSql()
 

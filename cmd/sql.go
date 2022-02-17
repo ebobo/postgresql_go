@@ -12,9 +12,9 @@ import (
 const (
 	host     = "localhost"
 	port     = 5432
-	user     = "user"
+	user     = "postgres"
 	password = "password"
-	dbname   = "lego_db"
+	dbname   = "postgres"
 )
 
 func runSql() {

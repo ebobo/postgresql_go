@@ -10,7 +10,7 @@ docker exec -it postgres-1 bash
 
 # login to database
 
-psql --username=user --dbname=lego_db
+psql --username=postgres --dbname=postgres
 
 # show connect info
 
