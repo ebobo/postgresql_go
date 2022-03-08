@@ -53,6 +53,8 @@ func RunSqlx() {
 
 	displayLegoTableContent(db)
 
+	addLegoSet(db, 21321, "International Space Station", "Ideas")
+
 	log.Println("Database Close")
 
 }
@@ -100,10 +102,11 @@ func displayLegoTableContent(db *sqlx.DB) {
 	}
 	defer row.Close()
 	for row.Next() { // Iterate and fetch the records from result cursor
-		var id int
+		var id int64
+		var model_id int
 		var catalog string
 		var name string
-		row.Scan(&id, &catalog, &name)
-		log.Println("Set: ", id, " ", catalog, " ", name)
+		row.Scan(&id, &model_id, &catalog, &name)
+		log.Println("Set: ", id, " ", model_id, " ", catalog, " ", name)
 	}
 }

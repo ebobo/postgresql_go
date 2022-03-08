@@ -2,7 +2,8 @@
 -- -------------------------
 
 CREATE TABLE IF NOT EXISTS lego (
-    model_id    INTEGER PRIMARY KEY NOT NULL,
-    name    TEXT NOT NULL,
-    catalog TEXT NOT NULL
+    id          SERIAL PRIMARY KEY NOT NULL,
+    model_id    INTEGER NOT NULL UNIQUE,
+    name        TEXT NOT NULL,
+    catalog     TEXT NOT NULL
 );
