@@ -53,10 +53,16 @@ func RunSqlx() {
 
 	displayLegoTableContent(db)
 
+	deleteLegoSet(db, 10220)
+
+	displayLegoTableContent(db)
+
 	addLegoSet(db, 21321, "International Space Station", "Ideas")
+	addLegoSet(db, 10280, "Blomsterbukett", "Creator")
+	addLegoSet(db, 42083, "Bugatti Chiron", "Technic")
 
+	displayLegoTableContent(db)
 	log.Println("Database Close")
-
 }
 
 func createSchema(db *sqlx.DB) error {
@@ -78,20 +84,22 @@ func dropTable(db *sqlx.DB) error {
 }
 
 // We are passing db reference connection from main to our method with other parameters
-func addLegoSet(db *sqlx.DB, id int, catalog string, name string) {
-	fmt.Println("Inserting lego info to table ...")
+func addLegoSet(db *sqlx.DB, model_id int, catalog string, name string) int64 {
 	// use "ON CONFLICT DO NOTHING" to avoid insert duplication
-	insertLegoSQL := `INSERT INTO lego (model_id, catalog, name) VALUES ($1, $2, $3) ON CONFLICT (model_id) DO NOTHING`
+	insertLegoSQL := `INSERT INTO lego (model_id, catalog, name) 
+					VALUES ($1, $2, $3) ON CONFLICT (model_id) DO NOTHING RETURNING id`
 	statement, err := db.Prepare(insertLegoSQL) // Prepare statement.
 	// This is good to avoid SQL injections
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	_, err = statement.Exec(id, catalog, name)
+	var id int64 = 0
+	err = statement.QueryRow(model_id, catalog, name).Scan(&id)
 	if err != nil {
-		fmt.Println("err 2")
 		fmt.Println(err.Error())
 	}
+	fmt.Printf("Inserting set %d to lego table, got id %d \n", model_id, id)
+	return id
 }
 
 func displayLegoTableContent(db *sqlx.DB) {
@@ -108,5 +116,20 @@ func displayLegoTableContent(db *sqlx.DB) {
 		var name string
 		row.Scan(&id, &model_id, &catalog, &name)
 		log.Println("Set: ", id, " ", model_id, " ", catalog, " ", name)
+	}
+}
+
+func deleteLegoSet(db *sqlx.DB, model_id int) {
+	fmt.Println("delete lego from table ...")
+	// use "ON CONFLICT DO NOTHING" to avoid insert duplication
+	deleteLegoSQL := `DELETE FROM lego WHERE model_id = $1`
+	statement, err := db.Prepare(deleteLegoSQL) // Prepare statement.
+	// This is good to avoid SQL injections
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	_, err = statement.Exec(model_id)
+	if err != nil {
+		fmt.Println(err.Error())
 	}
 }
